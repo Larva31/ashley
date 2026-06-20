@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love ✨</title>
+    <!-- Google Fonts for Aesthetic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #fdf6f6;
+            --primary-pink: #f4c2c2;
+            --accent-rose: #d4a5a5;
+            --text-dark: #4a3b32;
+            --gold: #dfb15b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Ambient floating hearts background */
+        .background-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* --- Header Section --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--accent-rose);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #8c766b;
+        }
+
+        /* --- Interactive Cake Section --- */
+        .cake-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #a8948a;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        .cake {
+            position: relative;
+            width: 180px;
+            height: 120px;
+            background: #f9e4e4;
+            border-radius: 20px 20px 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 4px solid #fff;
+        }
+
+        /* Frosting dripping effect */
+        .cake::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: var(--primary-pink);
+            border-radius: 15px 15px 10px 10px;
+        }
+
+        /* Candle */
+        .candle {
+            position: absolute;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 50px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffffff,
+                #ffffff 5px,
+                var(--accent-rose) 5px,
+                var(--accent-rose) 10px
+            );
+            border-radius: 3px;
+        }
+
+        /* Flame */
+        .flame {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 24px;
+            background: var(--gold);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 15px var(--gold);
+            animation: flicker 0.6s infinite alternate;
+            transition: opacity 0.5s ease;
+        }
+
+        .flame.extinguished {
+            opacity: 0;
+        }
+
+        /* --- Surprise Content (Hidden initially) --- */
+        .letter-container {
+            max-width: 650px;
+            width: 100%;
+            background: #ffffff;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(212, 165, 165, 0.15);
+            display: none; /* Triggered by JS */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.5s ease;
+            text-align: center;
+        }
+
+        .letter-container.reveal {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Poem Section */
+        .poem-section {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            color: #5c4a40;
+            white-space: pre-line; /* Keeps line breaks */
+        }
+
+        .divider {
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-pink);
+            margin: 30px auto;
+            position: relative;
+        }
+        .divider::after {
+            content: "🤍";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 0 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Essay Section */
+        .essay-section {
+            font-size: 1.05rem;
+            line-height: 1.8rem;
+            text-align: justify;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+        }
+
+        .essay-section p {
+            margin-bottom: 20px;
+            text-indent: 20px;
+        }
+
+        /* Closing Sign-off */
+        .sign-off {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--accent-rose);
+            margin-top: 30px;
+        }
+
+        /* --- Animations --- */
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1) skewX(5deg); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            h1 { font-size: 2.5rem; }
+            .letter-container { padding: 30px 20px; }
+            .poem-section { font-size: 1.1rem; }
+            .essay-section { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Hearts -->
+    <svg class="background-hearts" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <!-- You can let CSS or custom JS generate more, simple fallback inline styled shapes -->
+    </svg>
+
+    <header>
+        <h1 id="greeting">Happy Birthday, Beautiful</h1>
+        <div class="subtitle">TODAY IS ALL ABOUT YOU</div>
+    </header>
+
+    <!-- Interactive Cake -->
+    <div class="cake-container" id="cakeContainer" onclick="blowCandle()">
+        <div class="instruction" id="instructionText">Make a wish & click to blow out the candle</div>
+        <div class="candle">
+            <div class="flame" id="candleFlame"></div>
+        </div>
+        <div class="cake"></div>
+    </div>
+
+    <!-- Surprise Romantic Content -->
+    <div class="letter-container" id="birthdayLetter">
+        
+        <!-- The Poem -->
+        <div class="poem-section">
+            In a world of fleeting moments, you’re my steady light,
+            The softest dawn that breaks across the quiet of the night.
+            With every smile, you color fields of ordinary grey,
+            And hold my heart much closer than words could ever say.
+            
+            Happy birthday to the magic that made my world complete,
+            The sweetest rhythm in my life, the one that makes it sweet.
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- The Essay / Message -->
+        <div class="essay-section">
+            <p>
+                My Dearest, today is a celebration not just of the day you were born, but of the incredible warmth, grace, and joy you bring into the world every single day. Looking back at everything we’ve shared, I am constantly reminded of how incredibly lucky I am to walk through life by your side. You have this effortless way of making the hardest days feel light, and the simplest moments feel like absolute magic.
+            </p>
+            <p>
+                Thank you for being my confidante, my biggest supporter, and my favorite person to dream with. I hope this new year of your life brings you the exact kind of happiness you give to everyone around you—boundless, radiant, and pure. No matter where time takes us, my heart belongs exactly where you are. 
+            </p>
+            <p>
+                May all your wishes today come true, just like mine did the day I found you.
+            </p>
+        </div>
+
+        <div class="sign-off">
+            Forever & always yours, <br>
+            [Your Name]
+        </div>
+    </div>
+
+    <script>
+        function blowCandle() {
+            const flame = document.getElementById('candleFlame');
+            const letter = document.getElementById('birthdayLetter');
+            const instruction = document.getElementById('instructionText');
+            const greeting = document.getElementById('greeting');
+
+            if (!flame.classList.contains('extinguished')) {
+                // 1. Extinguish flame
+                flame.classList.add('extinguished');
+                
+                // 2. Change texts smoothly
+                instruction.style.opacity = '0';
+                setTimeout(() => {
+                    instruction.innerHTML = "✨ Your wishes are safe with me. ✨";
+                    instruction.style.opacity = '1';
+                    instruction.style.animation = 'none';
+                    greeting.innerHTML = "Happy Birthday, My Love ✨";
+                }, 500);
+
+                // 3. Burst beautiful romantic confetti
+                var duration = 3 * 1000;
+                var end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 3,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#f4c2c2', '#d4a5a5', '#dfb15b', '#ffffff']
+                    });
+                    confetti({
+                        particleCount: 3,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#f4c2c2', '#d4a5a5', '#dfb15b', '#ffffff']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+
+                // 4. Reveal the romantic letter and poem
+                letter.classList.add('reveal');
+                // Smooth scroll down to the letter
+                setTimeout(() => {
+                    letter.scrollIntoView({ behavior: 'smooth' });
+                }, 800);
+            }
+        }
+    </script>
+</body>
+</html>
