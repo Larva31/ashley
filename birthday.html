@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maligayang Kaarawan, Aking Sunflower 🌻</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --sunflower-yellow: #FFD700;
+            --sunflower-dark: #F5B041;
+            --brown-earth: #4A3525;
+            --bg-cream: #FFFDF2;
+            --accent-green: #2E7D32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            font-family: 'Poppins', sans-serif;
+            color: var(--brown-earth);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(rgba(255, 215, 0, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        /* Ambient Sunflower Background Elements */
+        .sunflower-bg {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.8rem;
+            color: var(--sunflower-dark);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #7A614E;
+            margin-top: 5px;
+        }
+
+        /* --- Interactive Blow Section --- */
+        .interactive-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(74, 53, 37, 0.08);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .instruction {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--brown-earth);
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        /* The Bongga Sunflower Cake */
+        .cake-wrapper {
+            position: relative;
+            width: 200px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .cake {
+            width: 180px;
+            height: 110px;
+            background: #FFF3CD;
+            border-radius: 15px 15px 5px 5px;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Sunflower on Cake */
+        .cake::after {
+            content: "🌻";
+            position: absolute;
+            font-size: 3.5rem;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -20%);
+        }
+
+        /* Candle */
+        .candle {
+            position: absolute;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 60px;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--sunflower-yellow),
+                var(--sunflower-yellow) 8px,
+                #fff 8px,
+                #fff 16px
+            );
+            border-radius: 4px;
+        }
+
+        /* Flame */
+        .flame {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 26px;
+            background: #FF5722;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px #FF9800, 0 0 10px var(--sunflower-yellow);
+            animation: flicker 0.5s infinite alternate;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .flame.extinguished {
+            opacity: 0;
+            transform: translateX(-50%) scale(0);
+        }
+
+        /* --- Romantic Surprise Content --- */
+        .letter-container {
+            max-width: 650px;
+            width: 100%;
+            background: #ffffff;
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(74, 53, 37, 0.12);
+            border-left: 8px solid var(--sunflower-yellow);
+            display: none;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .letter-container.reveal {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Poem Style */
+        .poem-section {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            line-height: 2.2rem;
+            font-style: italic;
+            color: #5D4037;
+            white-space: pre-line;
+            margin-bottom: 40px;
+        }
+
+        .divider {
+            margin: 40px auto;
+            font-size: 1.5rem;
+            color: var(--sunflower-dark);
+        }
+
+        /* Essay Style */
+        .essay-section {
+            font-size: 1.05rem;
+            line-height: 1.9rem;
+            text-align: justify;
+            color: var(--brown-earth);
+        }
+
+        .essay-section p {
+            margin-bottom: 25px;
+            text-indent: 20px;
+        }
+
+        .sign-off {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--sunflower-dark);
+            margin-top: 40px;
+        }
+
+        /* Audio Element hidden */
+        #bgMusic {
+            display: none;
+        }
+
+        /* --- Animations --- */
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+            100% { transform: translateX(-50%) scale(1.15) rotate(2deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.8rem; }
+            .letter-container { padding: 35px 20px; }
+            .poem-section { font-size: 1.1rem; line-height: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio para sa Birthday Song (Gumagamit ng royalty-free synth o pwede mo palitan ng mp3 link) -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Decorative floating sunflowers -->
+    <div class="sunflower-bg" style="top: 10%; left: 5%;">🌻</div>
+    <div class="sunflower-bg" style="top: 70%; left: 8%;">🌻</div>
+    <div class="sunflower-bg" style="top: 20%; right: 7%;">🌻</div>
+    <div class="sunflower-bg" style="top: 80%; right: 5%;">🌻</div>
+
+    <header>
+        <h1>Maligayang Kaarawan, Mahal Ko</h1>
+        <div class="subtitle">IKAW ANG AKING LIWANAG AT SUNFLOWER 🌻</div>
+    </header>
+
+    <!-- Interactive Blow Box -->
+    <div class="interactive-container">
+        <div class="instruction" id="statusText">
+            💡 <strong>I-allow ang Microphone</strong> pagkatapos ay i-tap ang kandila para simulan ang music, tapos <strong>HIPAN ANG PHONE MO</strong> para patayin ang apoy!
+        </div>
+        
+        <div class="cake-wrapper" onclick="startAudioAndMic()">
+            <div class="candle">
+                <div class="flame" id="candleFlame"></div>
+            </div>
+            <div class="cake"></div>
+        </div>
+    </div>
+
+    <!-- Bongga Surprise Content -->
+    <div class="letter-container" id="birthdayLetter">
+        
+        <!-- Ang Tula -->
+        <div class="poem-section">
+            Sa mundong kung minsan ay madilim at magulo,
+            Ikaw ang sunflower na nagbigay-kulay sa buhay ko.
+            Laging nakaharap sa liwanag ng iyong ngiti,
+            Lahat ng lungkot at hirap, agad na napapawi.
+            
+            Sa bawat araw na dumarating at nagdaan,
+            Pangako kong pag-ibig ko'y walang katapusan.
+            Salamat sa paglago kasabay ng aking puso,
+            Maligayang kaarawan sa pinakamahal kong tao.
+        </div>
+
+        <div class="divider">🌻 ✨ 🌻</div>
+
+        <!-- Ang Mensahe / Essay -->
+        <div class="essay-section">
+            <p>
+                Para sa aking pinakamamahal, ngayong araw na ito ay hindi lang basta pagdiriwang ng iyong kaarawan—ito ay pagpapasalamat ko rin sa tadhana dahil ibinigay ka niya sa akin. Parang isang sunflower, dala mo ang init at liwanag kahit sa pinakamalamig na mga araw ng buhay ko. Ang ganda ng puso mo at ang tamis ng iyong pagmamahal ang nagbibigay sa akin ng lakas araw-araw.
+            </p>
+            <p>
+                Salamat sa lahat ng tawa, sa mga simpleng kwentuhan, at sa walang sawang pag-unawa at suporta mo sa akin. Napakaswerte ko dahil sa dinami-rami ng tao sa mundo, ako ang biniyayaang makasama ang isang tulad mo. Sana ngayong araw na ito, maramdaman mo kung gaano ka kahalaga, hindi lang sa akin, kundi sa lahat ng taong nakapaligid sayo.
+            </p>
+            <p>
+                Hiling ko na matupad lahat ng pangarap mo, at asahan mo na sa bawat hakbang ng iyong paglalakbay, narito lang ako sa tabi mo—nakatitig at humahanga sa aking nag-iisang sunflower. Mahal na mahal kita, higit pa sa kayang sabihin ng mga salita.
+            </p>
+        </div>
+
+        <div class="sign-off">
+            Habang buhay na sa iyo, <br>
+            [Ang Pangalan Mo]
+        </div>
+    </div>
+
+    <script>
+        let audioContext;
+        let analyser;
+        let microphone;
+        let javascriptNode;
+        let isExtinguished = false;
+
+        // Ino-on ang background music at mic kapag pinindot ang cake
+        function startAudioAndMic() {
+            if (isExtinguished) return;
+
+            // Patugtugin ang background song
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Audio play dynamic dynamic block bypass active."));
+
+            document.getElementById('statusText').innerHTML = "🎵 Tumutugtog na ang music... Ngayon, <strong>HIPAN MO NA ANG PHONE MO!</strong> 💨";
+
+            // Simulan ang Microphone Blow Detection
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    microphone = audioContext.createMediaStreamSource(stream);
+                    javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+                    analyser.smoothingTimeConstant = 0.8;
+                    analyser.fftSize = 1024;
+
+                    microphone.connect(analyser);
+                    analyser.connect(javascriptNode);
+                    javascriptNode.connect(audioContext.destination);
+
+                    javascriptNode.onaudioprocess = function() {
+                        const array = new Uint8Array(analyser.frequencyBinCount);
+                        analyser.getByteFrequencyData(array);
+                        let values = 0;
+
+                        const length = array.length;
+                        for (let i = 0; i < length; i++) {
+                            values += array[i];
+                        }
+
+                        const average = values / length;
+                        
+                        // Kapag mataas ang "average" sound (ibig sabihin humihip nang malakas)
+                        if (average > 55 && !isExtinguished) { 
+                            triggerExtinguish();
+                            // Patayin ang mic pagkatapos para di maka-istorbo
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                    };
+                })
+                .catch(function(err) {
+                    console.log("Mic access error, fallback into tap active.", err);
+                    // Fallback kapag ayaw ibigay ang mic access (pwedeng i-click/i-tap na lang)
+                    document.getElementById('statusText').innerHTML = "⚠️ Ayaw gumana ng mic? No problem! <strong>I-tap mo na lang ulit ang kandila</strong> para umihip!";
+                    document.querySelector('.cake-wrapper').onclick = triggerExtinguish;
+                });
+            } else {
+                // Fallback para sa mga browser na walang mic support
+                triggerExtinguish();
+            }
+        }
+
+        function triggerExtinguish() {
+            if (isExtinguished) return;
+            isExtinguished = true;
+
+            const flame = document.getElementById('candleFlame');
+            const letter = document.getElementById('birthdayLetter');
+            const statusText = document.getElementById('statusText');
+
+            // 1. Patayin ang apoy
+            flame.classList.add('extinguished');
+            statusText.innerHTML = "✨ Natupad na ang wish mo! Narito ang liham ko para sa'yo... ✨";
+
+            // 2. Bonggang Sunflower & Gold Confetti Rain!
+            var end = Date.now() + (4 * 1000); // 4 na segundo ng confetti
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 60,
+                    origin: { x: 0 },
+                    colors: ['#FFD700', '#F5B041', '#4A3525', '#FFFFFF']
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 60,
+                    origin: { x: 1 },
+                    colors: ['#FFD700', '#F5B041', '#4A3525', '#FFFFFF']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // 3. Ipakita ang Sulat at Tula
+            letter.classList.add('reveal');
+            setTimeout(() => {
+                letter.scrollIntoView({ behavior: 'smooth' });
+            }, 800);
+        }
+    </script>
+</body>
+</html>
